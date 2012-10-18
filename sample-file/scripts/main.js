@@ -15,9 +15,9 @@ FileApp.prototype = {
      
 	run: function() {
 		var that = this,
-		writeFileButton = document.getElementById("writeFileButton"),
-		readFileButton = document.getElementById("readFileButton"),
-		deleteFileButton = document.getElementById("deleteFileButton");
+    		writeFileButton = document.getElementById("writeFileButton"),
+    		readFileButton = document.getElementById("readFileButton"),
+    		deleteFileButton = document.getElementById("deleteFileButton");
         
 		that.fileNameField = document.getElementById("fileNameInput");
 		that.textField = document.getElementById("textInput");
@@ -42,7 +42,7 @@ FileApp.prototype = {
     
 	deleteFile: function () {
 		var that = this,
-		fileName = that.fileNameField.value;
+		    fileName = that.fileNameField.value;
         
 		if (that.isValidFileName(fileName)) {
 			fileSystemHelper.deleteFile(fileName, that.onSuccess, that.onError);
@@ -51,12 +51,11 @@ FileApp.prototype = {
 			var error = { code: 44, message: "Invalid filename"};
 			that.onError(error);
 		}
-        
 	},
     
 	readTextFromFile: function() {
 		var that = this,
-		fileName = that.fileNameField.value;
+		    fileName = that.fileNameField.value;
         
 		if (that.isValidFileName(fileName)) {
 			fileSystemHelper.readTextFromFile(fileName, that.onSuccess, that.onError);
@@ -69,8 +68,8 @@ FileApp.prototype = {
     
 	writeTextToFile: function() {
 		var that = this,
-		fileName = that.fileNameField.value,
-		text = that.textField.value;
+    		fileName = that.fileNameField.value,
+    		text = that.textField.value;
 
 		if (that.isValidFileName(fileName)) {
 			fileSystemHelper.writeLine(fileName, text, that.onSuccess, that.onError)
@@ -89,8 +88,8 @@ FileApp.prototype = {
 	onError: function(error) {
 
 		var errorCodeDiv = document.createElement("div"),
-		errorMessageDiv = document.createElement("div"),
-		notificationBox = document.getElementById("result");
+    		errorMessageDiv = document.createElement("div"),
+    		notificationBox = document.getElementById("result");
 
 		errorCodeDiv.innerText = "Error code: " + error.code;
 		errorMessageDiv.innerText = "Message: " + error.message;
