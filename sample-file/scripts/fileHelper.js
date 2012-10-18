@@ -1,112 +1,114 @@
 
-function FileSystemHelper(fileName, notificationElementId) { 
-    this.fileName =  fileName;
-    this.notificationElementId = notificationElementId;
-    this.initializeFileToWrite();
+function FileSystemHelper() { 
 }
 
 FileSystemHelper.prototype = {
-    savedWriter: null,
-    fileName: null,
-    notificationElementId: null,
     
     writeNotification: function(value) {
         var notificationBox = document.getElementById(this.notificationElementId);
         notificationBox.innerText = value;
     },
     
-    initializeFileToWrite: function() {
+    writeLine: function(fileName, text, onSuccess, onError) {
         var that = this;
         var grantedBytes = 0;
-        
+
         window.requestFileSystem(LocalFileSystem.PERSISTENT, grantedBytes,
-            function() {
-                that.createFile.apply(that, arguments);
+            function(fileSystem) {
+                that.createFile.call(that, fileSystem, fileName, text, onSuccess, onError);
             },
             function(error) {
-                 writeNotification("Request file system failed. Code = " + error.code);
+                error.message = "Request file system failed.";
+                onError.call(that, error);
             });
     },
     
-    createFile: function(fileSystem) { 
+    createFile: function(fileSystem, fileName, text, onSuccess, onError) { 
         var that = this;
         var options = {
             create: true, 
             exclusive: false
         };
-        
-        fileSystem.root.getFile(that.fileName, options,
-            function() {
-                that.createFileWriter.apply(that, arguments);
+
+        fileSystem.root.getFile(fileName, options,
+            function(fileEntry) {
+                that.createFileWriter.call(that, fileEntry, text, onSuccess, onError);
             },
             function (error) {
-                writeNotification("Failed creating file. Code = " + error.code);
+                error.message = "Failed creating file.";
+                onError.call(that, error);
             });
     },
     
-    createFileWriter: function(fileEntry) {
-        var that = this; 
+    createFileWriter: function(fileEntry, text, onSuccess, onError) {
+        var that = this;
         fileEntry.createWriter(
-            function() {
-                that.saveWriter.apply(that, arguments);
+            function(fileWriter) {
+                var len = fileWriter.length;
+                fileWriter.seek(len);
+                fileWriter.write(text + '\n');
+                var message = "Wrote: " + text;
+                onSuccess.call(that, message);
             },
             function(error) {
-               writeNotification("Unable to create file writer. Code = " + error.code);
+                error.message = "Unable to create file writer.";
+                onError.call(that, error);
             });
+        
+        
     },
 
-    saveWriter: function(writer) {
+    readTextFromFile : function(fileName, onSuccess, onError) {
         var that = this;
-        that.savedWriter = writer;
-    },
-    
-    readTextFromFile : function() {
-        var that = this;
+        
         window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, 
-            function() {
-                that.getFileEntry.apply(that, arguments);
+            function(fileSystem) {
+                that.getFileEntry.call(that, fileSystem, fileName, onSuccess, onError);
             },
             function(error) {
-                that.writeNotification("Unable to request file system. Code = " + error.code);
+                error.message = "Unable to request file system.";
+                onError.call(that, error);
             });
     },
     
-    getFileEntry: function(fileSystem) {
+    getFileEntry: function(fileSystem, fileName, onSuccess, onError) {
+        
         var that = this;
         // Get existing file, don't create a new one.
-        fileSystem.root.getFile(that.fileName, null,
-            function() {
-                that.getFile.apply(that, arguments);
+        fileSystem.root.getFile(fileName, null,
+            function(fileEntry) {
+                that.getFile.call(that, fileEntry, onSuccess, onError);
             }, 
             function(error) {
-                that.writeNotification("Unable to get file entry for reading. Code = " + error.code); 
+                error.message = "Unable to get file entry for reading.";
+                onError.call(that, error);
             });
     },
 
-    getFile: function(fileEntry) {
+    getFile: function(fileEntry, onSuccess, onError) { 
         var that = this; 
         fileEntry.file(
-            function() {
-                that.getFileReader.apply(that, arguments);
+            function(file) { 
+                that.getFileReader.call(that, file, onSuccess);
             },
             function(error) {
-                that.writeNotification("Unable to get file for reading. Code = " + error.code);
+                error.message = "Unable to get file for reading.";
+                onError.call(that, error);
             });
     },
 
-    getFileReader: function(file) {
+    getFileReader: function(file, onSuccess) {
         var that = this;
         var reader = new FileReader();
-        
         reader.onloadend = function(evt) { 
-            console.log(evt);
             var textToWrite = evt.target.result;
-            that.writeNotification(textToWrite);
+            onSuccess.call(that, textToWrite);
         };
+        
         reader.readAsText(file);
     },
     
-    writeTextToFile: function(text) {
+    writeTextToFile: function(fileName, text) {
         var that = this;
         if (fileSystemHelper.savedWriter) {
             that.savedWriter.write(text + "\n");
@@ -117,32 +119,37 @@ FileSystemHelper.prototype = {
         }
     },
     
-    deleteFile: function() {
+    deleteFile: function(fileName, onSuccess, onError) {
         var that = this;
-        window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function() {
-            that.getFileEntryForDelete.apply(that, arguments);
-        }, function() {
-            fileSystemHelper.writeNotification("Unable to retrieve file system.");
+       
+        window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem) {
+            that.getFileEntryForDelete.call(that, fileSystem, fileName, onSuccess, onError);
+        }, function(error) {
+            error.message = "Unable to retrieve file system.";
+            onError.call(that, error);
         });
     }, 
     
-    getFileEntryForDelete: function(fileSystem) {
+    getFileEntryForDelete: function(fileSystem, fileName, onSuccess, onError) { 
         var that = this;
-        fileSystem.root.getFile(that.fileName, null, 
-            function () {
-                that.removeFile.apply(that, arguments);
-            } , 
-            function() {
-                fileSystemHelper.writeNotification("Unable to find the file.");
+        fileSystem.root.getFile(fileName, null, 
+            function (fileEntry) {
+                that.removeFile.call(that, fileEntry, onSuccess, onError);
+            },
+            function(error) {
+                error.message = "Unable to find the file.";
+                onError.call(that, error)
             });
     },
     
-    removeFile : function(fileEntry) {
+    removeFile : function(fileEntry, onSuccess, onError) {
+        var that = this;
         fileEntry.remove(function (entry) {
-            fileSystemHelper.writeNotification("Removed the file.");
+            var message = "File removed.";
+            onSuccess.call(that, message);
         }, function (error) {
-            fileSystemHelper.writeNotification("Unable to remove the file.");
+            error.message = "Unable to remove the file.";
+            onError.call(that, error)
         });
     }
-    
 };
