@@ -1,4 +1,7 @@
+//NOTE: Cordova File api has some issues with file reading in iOS 6
 document.addEventListener("deviceready", onDeviceReady, false);
+//Activate :active state
+document.addEventListener("touchstart", function() {}, false);
 
 function onDeviceReady() {
 	var fileApp = new FileApp();
@@ -24,68 +27,68 @@ FileApp.prototype = {
         
 		writeFileButton.addEventListener("click",
 										 function() { 
-											 that.writeTextToFile.call(that); 
+											 that._writeTextToFile.call(that); 
 										 });
         
 		readFileButton.addEventListener("click",
 										function() {
-											that.readTextFromFile.call(that);
+											that._readTextFromFile.call(that);
 										});
         
 		deleteFileButton.addEventListener("click",
 										  function() {
-											  that.deleteFile.call(that)
+											  that._deleteFile.call(that)
 										  });
         
 		fileSystemHelper = new FileSystemHelper();
 	},
     
-	deleteFile: function () {
+	_deleteFile: function () {
 		var that = this,
 		    fileName = that.fileNameField.value;
         
-		if (that.isValidFileName(fileName)) {
-			fileSystemHelper.deleteFile(fileName, that.onSuccess, that.onError);
+		if (that._isValidFileName(fileName)) {
+			fileSystemHelper.deleteFile(fileName, that._onSuccess, that._onError);
 		}
 		else {
 			var error = { code: 44, message: "Invalid filename"};
-			that.onError(error);
+			that._onError(error);
 		}
 	},
     
-	readTextFromFile: function() {
+	_readTextFromFile: function() {
 		var that = this,
 		    fileName = that.fileNameField.value;
         
-		if (that.isValidFileName(fileName)) {
-			fileSystemHelper.readTextFromFile(fileName, that.onSuccess, that.onError);
+		if (that._isValidFileName(fileName)) {
+			fileSystemHelper.readTextFromFile(fileName, that._onSuccess, that._onError);
 		}
 		else {
 			var error = { code: 44, message: "Invalid filename"};
-			that.onError(error);
+			that._onError(error);
 		}
 	},
     
-	writeTextToFile: function() {
+	_writeTextToFile: function() {
 		var that = this,
     		fileName = that.fileNameField.value,
     		text = that.textField.value;
 
-		if (that.isValidFileName(fileName)) {
-			fileSystemHelper.writeLine(fileName, text, that.onSuccess, that.onError)
+		if (that._isValidFileName(fileName)) {
+			fileSystemHelper.writeLine(fileName, text, that._onSuccess, that._onError)
 		}
 		else {
 			var error = { code: 44, message: "Invalid filename"};
-			that.onError(error);
+			that._onError(error);
 		}
 	},
     
-	onSuccess: function(value) {
+	_onSuccess: function(value) {
 		var notificationBox = document.getElementById("result");
 		notificationBox.innerText = value;
 	},
     
-	onError: function(error) {
+	_onError: function(error) {
 
 		var errorCodeDiv = document.createElement("div"),
     		errorMessageDiv = document.createElement("div"),
@@ -99,7 +102,7 @@ FileApp.prototype = {
 		notificationBox.appendChild(errorMessageDiv);
 	},
     
-	isValidFileName: function(fileName) {
+	_isValidFileName: function(fileName) {
 		//var patternFileName = /^[\w]+\.[\w]{1,5}$/;
 
 		return fileName.length > 2;

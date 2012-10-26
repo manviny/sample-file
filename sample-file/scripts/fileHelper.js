@@ -3,13 +3,15 @@ function FileSystemHelper() {
 }
 
 FileSystemHelper.prototype = {
-	writeLine: function(fileName, text, onSuccess, onError) {
+	
+    //Writing operations
+    writeLine: function(fileName, text, onSuccess, onError) {
 		var that = this;
 		var grantedBytes = 0;
 
 		window.requestFileSystem(LocalFileSystem.PERSISTENT, grantedBytes,
 								 function(fileSystem) {
-									 that.createFile.call(that, fileSystem, fileName, text, onSuccess, onError);
+									 that._createFile.call(that, fileSystem, fileName, text, onSuccess, onError);
 								 },
 								 function(error) {
 									 error.message = "Request file system failed.";
@@ -17,7 +19,7 @@ FileSystemHelper.prototype = {
 								 });
 	},
     
-	createFile: function(fileSystem, fileName, text, onSuccess, onError) { 
+	_createFile: function(fileSystem, fileName, text, onSuccess, onError) { 
 		var that = this;
 		var options = {
 			create: true, 
@@ -26,7 +28,7 @@ FileSystemHelper.prototype = {
 
 		fileSystem.root.getFile(fileName, options,
 								function(fileEntry) {
-									that.createFileWriter.call(that, fileEntry, text, onSuccess, onError);
+									that._createFileWriter.call(that, fileEntry, text, onSuccess, onError);
 								},
 								function (error) {
 									error.message = "Failed creating file.";
@@ -34,29 +36,29 @@ FileSystemHelper.prototype = {
 								});
 	},
     
-	createFileWriter: function(fileEntry, text, onSuccess, onError) {
+	_createFileWriter: function(fileEntry, text, onSuccess, onError) {
 		var that = this;
-		fileEntry.createWriter(
-			function(fileWriter) {
-				var len = fileWriter.length;
-				fileWriter.seek(len);
-				fileWriter.write(text + '\n');
-				var message = "Wrote: " + text;
-				onSuccess.call(that, message);
-			},
-			function(error) {
-				error.message = "Unable to create file writer.";
-				onError.call(that, error);
-			});
+		fileEntry.createWriter(function(fileWriter) {
+                                    var len = fileWriter.length;
+                                    fileWriter.seek(len);
+                                    fileWriter.write(text + '\n');
+                                    var message = "Wrote: " + text;
+                                    onSuccess.call(that, message);
+                                },
+                    			function(error) {
+                    				error.message = "Unable to create file writer.";
+                    				onError.call(that, error);
+                    			});
         
 	},
-
+    
+    //Reading operations
 	readTextFromFile : function(fileName, onSuccess, onError) {
 		var that = this;
         
 		window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, 
 								 function(fileSystem) {
-									 that.getFileEntry.call(that, fileSystem, fileName, onSuccess, onError);
+									 that._getFileEntry.call(that, fileSystem, fileName, onSuccess, onError);
 								 },
 								 function(error) {
 									 error.message = "Unable to request file system.";
@@ -64,13 +66,13 @@ FileSystemHelper.prototype = {
 								 });
 	},
     
-	getFileEntry: function(fileSystem, fileName, onSuccess, onError) {
+	_getFileEntry: function(fileSystem, fileName, onSuccess, onError) {
         
 		var that = this;
 		// Get existing file, don't create a new one.
 		fileSystem.root.getFile(fileName, null,
 								function(fileEntry) {
-									that.getFile.call(that, fileEntry, onSuccess, onError);
+									that._getFile.call(that, fileEntry, onSuccess, onError);
 								}, 
 								function(error) {
 									error.message = "Unable to get file entry for reading.";
@@ -78,11 +80,11 @@ FileSystemHelper.prototype = {
 								});
 	},
 
-	getFile: function(fileEntry, onSuccess, onError) { 
+	_getFile: function(fileEntry, onSuccess, onError) { 
 		var that = this; 
 		fileEntry.file(
 			function(file) { 
-				that.getFileReader.call(that, file, onSuccess);
+				that._getFileReader.call(that, file, onSuccess);
 			},
 			function(error) {
 				error.message = "Unable to get file for reading.";
@@ -90,7 +92,7 @@ FileSystemHelper.prototype = {
 			});
 	},
 
-	getFileReader: function(file, onSuccess) {
+	_getFileReader: function(file, onSuccess) {
 		var that = this;
 		var reader = new FileReader();
 		reader.onloadend = function(evt) { 
@@ -101,23 +103,25 @@ FileSystemHelper.prototype = {
 		reader.readAsText(file);
 	},
    
-    
+    //Deleting operations
 	deleteFile: function(fileName, onSuccess, onError) {
 		var that = this;
        
-		window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem) {
-			that.getFileEntryForDelete.call(that, fileSystem, fileName, onSuccess, onError);
-		}, function(error) {
-			error.message = "Unable to retrieve file system.";
-			onError.call(that, error);
-		});
+		window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, 
+                                function(fileSystem) {
+                        			that._getFileEntryForDelete.call(that, fileSystem, fileName, onSuccess, onError);
+                        		}, function(error) {
+                        			error.message = "Unable to retrieve file system.";
+                        			onError.call(that, error);
+                        		});
 	}, 
     
-	getFileEntryForDelete: function(fileSystem, fileName, onSuccess, onError) { 
+	_getFileEntryForDelete: function(fileSystem, fileName, onSuccess, onError) { 
 		var that = this;
-		fileSystem.root.getFile(fileName, null, 
+		fileSystem.root.getFile(fileName, 
+                                null, 
 								function (fileEntry) {
-									that.removeFile.call(that, fileEntry, onSuccess, onError);
+									that._removeFile.call(that, fileEntry, onSuccess, onError);
 								},
 								function(error) {
 									error.message = "Unable to find the file.";
@@ -125,14 +129,14 @@ FileSystemHelper.prototype = {
 								});
 	},
     
-	removeFile : function(fileEntry, onSuccess, onError) {
+	_removeFile : function(fileEntry, onSuccess, onError) {
 		var that = this;
 		fileEntry.remove(function (entry) {
-			var message = "File removed.";
-			onSuccess.call(that, message);
-		}, function (error) {
-			error.message = "Unable to remove the file.";
-			onError.call(that, error)
-		});
+                			var message = "File removed.";
+                			onSuccess.call(that, message);
+                		}, function (error) {
+                			error.message = "Unable to remove the file.";
+                			onError.call(that, error)
+                		});
 	}
 };

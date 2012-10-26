@@ -1,5 +1,6 @@
-html {
-    -webkit-tap-highlight-color: rgba(0,0,0,0);
+html
+{
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
 body
@@ -7,8 +8,8 @@ body
 	font-family: sans-serif, Arial, Segoe UI;
 	font-size: 16px;
 	background: #888 url(img/background.png) repeat;
-    margin: 0;
-    padding: 0;
+	margin: 0;
+	padding: 0;
 }
 
 .header
@@ -19,8 +20,8 @@ body
 	height: 60px;
 	position: fixed;
 	top: 0px;
-    display: block;
-    width: 100%;
+	display: block;
+	width: 100%;
 }
 
 h1
@@ -39,7 +40,8 @@ h1
 	text-align: center;
 }
 
-.button {
+.button
+{
 	border: 1px solid rgba(255, 255, 255, 0.5);
 	border-radius: 5px;
 	color: #fff;
@@ -52,8 +54,9 @@ h1
 	width: 143px;
 }
 
-.button:active {
-    border: 1px solid #8ab6da;
+.button:active
+{
+	border: 1px solid #8ab6da;
 	background-image: none;
 	background-color: #639ECD;
 	box-shadow: 1px 1px 1px #6C7077;
@@ -61,66 +64,70 @@ h1
 
 .button:disabled,
 .button:disabled:hover,
-.button:disabled:active {
-    background: rgba(49, 52, 55, 0.1);
-    color: rgba(255, 255, 255, 0.5); 
-    border: 1px solid rgba(255, 255, 255, 0.5);
+.button:disabled:active
+{
+	background: rgba(49, 52, 55, 0.1);
+	color: rgba(255, 255, 255, 0.5); 
+	border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
 @media screen and (max-width: 400px)
 {
-    button.big
-    {
-        width: 300px;
-    }
+	button.big
+	{
+		width: 300px;
+	}
 }
 
-#fileNameInput {
-    margin-bottom: 10px; 
+#fileNameInput
+{
+	margin-bottom: 10px; 
 }
 
-.inputBox {
-    background-color: #EFEFEF;
-    font-style: italic;
-    color: #A7A7A7;
-    width: 280px;
-    padding: 7px 10px;
-    border-radius: 3px;
-    border-width: 1px;
-    border-style: solid;
-    border-color: rgb(180, 180, 180);
-    border-bottom-color: rgb(255, 255, 255);
-    box-shadow: 0 -1px 0 #3C3C3C;
+.inputBox
+{
+	background-color: #EFEFEF;
+	font-style: italic;
+	color: #A7A7A7;
+	width: 280px;
+	padding: 7px 10px;
+	border-radius: 3px;
+	border-width: 1px;
+	border-style: solid;
+	border-color: rgb(180, 180, 180);
+	border-bottom-color: rgb(255, 255, 255);
+	box-shadow: 0 -1px 0 #3C3C3C;
 }
 
 .horizontalLine
 {
-    border: none;
-    border-top: 1px solid #B3B7BF;
-    box-shadow: 0px -1px 0px #565961;
-    margin-top: 20px;
-    margin-bottom: 20px;
+	border: none;
+	border-top: 1px solid #B3B7BF;
+	box-shadow: 0px -1px 0px #565961;
+	margin-top: 20px;
+	margin-bottom: 20px;
 }
 
-#result {
-    border-radius: 5px;
-    border-width: 1px;
-    border-style: solid;
-    border-top-color: rgba(0, 0, 0, 0);
-    border-right-color: rgba(0, 0, 0, 0.2);
-    border-bottom-color: rgba(255, 255, 255, 0.5);
-    border-left-color: rgba(0, 0, 0, 0.2);
-    background-color: rgba(103,109,119,0.85);
-    margin: 10px auto;
-    box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.7);
-    color: #fff;
-    line-height:20px;
-    font-weight: bold;
-    font-size: 15px;
-    text-align: left;
-    max-width: 268px;
-    min-height:20px;
-    padding:10px 18px;
+#result
+{
+	border-radius: 5px;
+	border-width: 1px;
+	border-style: solid;
+	border-top-color: rgba(0, 0, 0, 0);
+	border-right-color: rgba(0, 0, 0, 0.2);
+	border-bottom-color: rgba(255, 255, 255, 0.5);
+	border-left-color: rgba(0, 0, 0, 0.2);
+	background-color: rgba(103, 109, 119, 0.85);
+	margin: 10px auto;
+	box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.7);
+	color: #fff;
+	line-height: 20px;
+	font-weight: bold;
+	font-size: 15px;
+	text-align: left;
+	max-width: 268px;
+	min-height: 20px;
+	padding: 10px 18px;
 }
 
 .footer
@@ -137,9 +144,9 @@ h1
 .footer:before
 {
 	content: url(img/logo.png);
-    position: relative;
-    top: 2px;
-    left: 12px;
+	position: relative;
+	top: 2px;
+	left: 12px;
 }
 
 .footer img
@@ -151,7 +158,6 @@ h1
 	padding-top: 3px;
 }
 
-
 .footer div
 {
 	float: right;
@@ -160,15 +166,17 @@ h1
 	padding-top: 2px;
 }
 
-.mapCompassFrame {
-    width: 154px;
-    height: 154px;
-    background-image: url("img/compassFrame.png");
-    margin: 0 auto;
+.mapCompassFrame
+{
+	width: 154px;
+	height: 154px;
+	background-image: url("img/compassFrame.png");
+	margin: 0 auto;
 }
 
-.mapCompass {
-    width: 154px;
-    height: 154px;
-    background-image: url("img/compass.png");
+.mapCompass
+{
+	width: 154px;
+	height: 154px;
+	background-image: url("img/compass.png");
 }
