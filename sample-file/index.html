@@ -14,18 +14,21 @@
 			<h1>File Sample</h1>
 		</header>
 		<div class="content">
-			<input class="inputBox" id="fileNameInput" placeholder="File name"/>
-			<input class="inputBox" id="textInput" placeholder="Text"/>
-
-			<hr class="horizontalLine" />
-			<div>
-				<button class="button" id="writeFileButton">Write</button>
+            <div class="input-area ch30">
+                <input class="inputBox" id="fileNameInput" placeholder="File name"/>
+			    <input class="inputBox" id="textInput" placeholder="Text"/>
+            </div>
+			<div class="action-area ch30">
+                <button class="button" id="writeFileButton">Write</button>
 				<button class="button" id="readFileButton">Read</button>
-				<button class="button big" id="deleteFileButton">Delete</button>
+				<button class="button" id="deleteFileButton">Delete</button>
 			</div>
-			<hr class="horizontalLine" />
-
-			<div id="result"></div>
+			<div class="result-area ch40">
+				<div class="results">
+                    <div id="result" class="desc"></div>
+                </div>
+                <div class="separator"></div>
+			</div>
 		</div>
 		<footer class="footer">
 			<div>Cordova API Samples</div>
