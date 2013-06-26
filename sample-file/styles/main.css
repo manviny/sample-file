@@ -235,18 +235,18 @@ body
     height:60px;   
 }
 .button.dw {
-    width:240px;   
+    width:220px;   
 } 
 
 /* landscape */
 @media screen and (orientation:landscape) {
 	.button.dh {
         height:32px;
-        width:240px; 
+        width:220px; 
     }
     .content > .input-area > .inputBox {
         height:32px;
-        width:245px; 
+        width:220px; 
     }
 }
 
